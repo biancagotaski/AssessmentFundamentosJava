@@ -1,52 +1,74 @@
 package negocio;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
 	static Scanner scanner = new Scanner(System.in);
 	static String input;
+	static DBConnection db = new DBConnection();
 	
 	public static void main(String[] args) {
 		menu();
-		escolherPais();
+		String optionCidade = cadastrarCidade();
+		int optionPais = escolherPais();
+		listarCidades();
+		cadastrar(optionCidade, optionPais);
 	}
 	
 	public static String menu() {
 		System.out.println("1. Cadastrar cidade \n"
 				+ "2. Listar cidades"
 				);
-		input = scanner.nextLine();
 		
+		input = scanner.nextLine();
+			
 		return input;
 	}
 	
-	public static String escolherPais() {
-		System.out.println("a) Brasil\n"
-				+ "b) EUA\n"
-				+ "c) Japão"
+	public static String cadastrarCidade() {
+		System.out.println("Escreva o nome da cidade: \n");
+		String cidade = scanner.nextLine();
+		
+		return cidade;
+	}
+	
+	public static int escolherPais() {
+		System.out.println("1. Brasil\n"
+				+ "2. EUA\n"
+				+ "3. Japão"
 				);
-		input = scanner.nextLine();
+		System.out.println("Selecione o país: \n");
+		int selected = scanner.nextInt();
 		
-		return input;
+		switch(selected) {
+			case 1:
+				return 1;
+			case 2:
+				return 2;
+			case 3:
+				return 3;
+			default:
+				return 0;
+		}
 	}
 	
-	public static String cadastrar(String cidade, String pais) {
-		Pais p1 = new Pais();
-		p1.setNome(pais);
-		Cidade c1 = new Cidade();
-		c1.setNome(cidade);
-		c1.setPais(p1);
-		
-		//Faz a operação com o banco de dados...
-		//Se tudo estiver ok:
-		return "Cidade cadastrada com sucesso!";
-		//senão retorna uma mensagem indicando que a cidade não foi cadastrada.
+	public static void cadastrar(String cidade, int pais) {
+		try {
+			db.cadastrar(cidade, pais);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
-	public static List<String> listarCidades(){
-		List<String> cidades = null;
-		return cidades;
+	public static void listarCidades(){
+		try {
+			db.listarCidades();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 }
